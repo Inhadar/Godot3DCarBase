@@ -1,0 +1,89 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://RoadTextures/Asphalt1/Road005_1K-JPG_Roughness.jpg" type="Texture" id=1]
+[ext_resource path="res://RoadTextures/Asphalt1/Road005_1K-JPG_Color.jpg" type="Texture" id=2]
+[ext_resource path="res://RoadTextures/Asphalt1/Road005_1K-JPG_NormalGL.jpg" type="Texture" id=3]
+[ext_resource path="res://Cars/sedan-sports.tscn" type="PackedScene" id=4]
+[ext_resource path="res://icon.png" type="Texture" id=5]
+[ext_resource path="res://Fonts/leaguespartan-bold.ttf" type="DynamicFontData" id=6]
+[ext_resource path="res://Roads/LongRoad.gd" type="Script" id=7]
+
+[sub_resource type="PlaneMesh" id=1]
+size = Vector2( 2, 2000 )
+
+[sub_resource type="SpatialMaterial" id=3]
+albedo_texture = ExtResource( 2 )
+roughness_texture = ExtResource( 1 )
+normal_enabled = true
+normal_scale = 11.01
+normal_texture = ExtResource( 3 )
+uv1_scale = Vector3( 1, 700, 1 )
+
+[sub_resource type="ConcavePolygonShape" id=2]
+data = PoolVector3Array( 1, 0, 100, -1, 0, 100, 1, 0, -100, -1, 0, 100, -1, 0, -100, 1, 0, -100 )
+
+[sub_resource type="ConcavePolygonShape" id=4]
+data = PoolVector3Array( 1, 0, 100, -1, 0, 100, 1, 0, -100, -1, 0, 100, -1, 0, -100, 1, 0, -100 )
+
+[sub_resource type="ConcavePolygonShape" id=6]
+data = PoolVector3Array( 1, 0, 1000, -1, 0, 1000, 1, 0, -1000, -1, 0, 1000, -1, 0, -1000, 1, 0, -1000 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 128
+font_data = ExtResource( 6 )
+
+[sub_resource type="CircleShape2D" id=7]
+radius = 38.99
+
+[node name="LongRoad" type="Node"]
+script = ExtResource( 7 )
+
+[node name="road" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -984.339 )
+mesh = SubResource( 1 )
+material/0 = SubResource( 3 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="StaticBody" type="StaticBody" parent="road"]
+
+[node name="CollisionShape" type="CollisionShape" parent="road/StaticBody"]
+shape = SubResource( 2 )
+
+[node name="StaticBody2" type="StaticBody" parent="road"]
+
+[node name="CollisionShape" type="CollisionShape" parent="road/StaticBody2"]
+shape = SubResource( 4 )
+
+[node name="StaticBody3" type="StaticBody" parent="road"]
+
+[node name="CollisionShape" type="CollisionShape" parent="road/StaticBody3"]
+shape = SubResource( 6 )
+
+[node name="sedan-sports" parent="." instance=ExtResource( 4 )]
+transform = Transform( -0.2, 0, -3.01992e-08, 0, 0.2, 0, 3.01992e-08, 0, -0.2, 0, 0.0655347, 0 )
+
+[node name="Camera" type="Camera" parent="sedan-sports"]
+transform = Transform( -5, -1.82843e-07, -4.77192e-07, -3.65685e-07, 4.54156, 2.09148, 3.56957e-07, 2.09148, -4.54156, 5.03538e-07, 2.80902, -5.7598 )
+current = true
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="Speedometer" type="Label" parent="HUD"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 471.0
+margin_bottom = 171.0
+rect_scale = Vector2( 0.2, 0.2 )
+custom_fonts/font = SubResource( 5 )
+text = "Speed:"
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="HUD"]
+position = Vector2( 73, 394 )
+scale = Vector2( 2, 2 )
+normal = ExtResource( 5 )
+shape = SubResource( 7 )
+
+[connection signal="pressed" from="HUD/TouchScreenButton" to="." method="_on_TouchScreenButton_pressed"]
+[connection signal="released" from="HUD/TouchScreenButton" to="." method="_on_TouchScreenButton_released"]
